@@ -28,3 +28,6 @@ I am an [EPUB 3.2](https://www.w3.org/publishing/epub3/index.html) object model 
   - [ ] Syntax
   - [ ] Resolving as model
   - [ ] Processing IRI
+
+## Usage
+See this [example](https://github.com/jccr/epubavocado/blob/main/test/package.test.ts) from the tests.
