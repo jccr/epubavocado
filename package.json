@@ -1,0 +1,49 @@
+{
+  "name": "epubavocado",
+  "version": "1.0.0",
+  "description": "I am an EPUB object model aspiring to be standards compliant.",
+  "main": "lib/package.js",
+  "scripts": {
+    "build": "tsc",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jccr/epubavocado.git"
+  },
+  "keywords": [
+    "epub",
+    "parser",
+    "object",
+    "model",
+    "api",
+    "xml",
+    "json",
+    "js",
+    "javascript",
+    "typescript"
+  ],
+  "author": "Juan Carlos Corona Romero <c@rlos.email>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jccr/epubavocado/issues"
+  },
+  "homepage": "https://github.com/jccr/epubavocado#readme",
+  "devDependencies": {
+    "@types/jest": "^26.0.15",
+    "@types/xmldom": "^0.1.30",
+    "@typescript-eslint/eslint-plugin": "^4.8.2",
+    "@typescript-eslint/parser": "^4.8.2",
+    "eslint": "^7.14.0",
+    "eslint-config-prettier": "^6.15.0",
+    "eslint-plugin-prettier": "^3.1.4",
+    "jest": "^26.6.3",
+    "prettier": "^2.2.1",
+    "ts-jest": "^26.4.4",
+    "typescript": "^4.1.2",
+    "xmldom": "^0.4.0"
+  },
+  "dependencies": {
+    "xpath": "0.0.32"
+  }
+}
