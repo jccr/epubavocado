@@ -1,0 +1,21 @@
+# This workflow will do a clean install of node dependencies, and run tests in a browser
+
+name: Browser
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js 
+      uses: actions/setup-node@v1
+    - run: npm ci
+    - run: npm run test:browser

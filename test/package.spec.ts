@@ -1,9 +1,9 @@
 import { readFileSync } from 'fs'
-
-import { Package } from '../src/package'
 import xmldom from 'xmldom'
 
-test('init Package', () => {
+import { Package } from '../src/package'
+
+it('initializes Package', () => {
   const xmlDoc = new xmldom.DOMParser().parseFromString(
     readFileSync('test/data/input.opf', 'utf-8'),
   )

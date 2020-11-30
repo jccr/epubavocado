@@ -5,7 +5,8 @@
   "main": "lib/package.js",
   "scripts": {
     "build": "tsc",
-    "test": "jest"
+    "test": "jest",
+    "test:browser": "karma start"
   },
   "repository": {
     "type": "git",
@@ -30,6 +31,7 @@
   },
   "homepage": "https://github.com/jccr/epubavocado#readme",
   "devDependencies": {
+    "@playwright/test": "^0.162.0",
     "@types/jest": "^26.0.15",
     "@types/xmldom": "^0.1.30",
     "@typescript-eslint/eslint-plugin": "^4.8.2",
@@ -37,8 +39,14 @@
     "eslint": "^7.14.0",
     "eslint-config-prettier": "^6.15.0",
     "eslint-plugin-prettier": "^3.1.4",
+    "jasmine": "^3.6.3",
     "jest": "^26.6.3",
+    "karma": "^5.2.3",
+    "karma-chrome-launcher": "^3.1.0",
+    "karma-jasmine": "^4.0.1",
+    "karma-typescript": "^5.2.0",
     "prettier": "^2.2.1",
+    "puppeteer": "^5.5.0",
     "ts-jest": "^26.4.4",
     "typescript": "^4.1.2",
     "xmldom": "^0.4.0"
