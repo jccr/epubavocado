@@ -1,12 +1,8 @@
-import { readFileSync } from 'fs'
-import xmldom from 'xmldom'
+import { Package } from '../../src/mod.js'
 
-import { Package } from '../src/mod.js'
-
-it('initializes Package', () => {
-  const xmlDoc = new xmldom.DOMParser().parseFromString(
-    readFileSync('test/data/input.opf', 'utf-8'),
-  )
+it('initializes Package', async () => {
+  const xmlData = await (await fetch('/base/test/data/input.opf')).text()
+  const xmlDoc = new DOMParser().parseFromString(xmlData, 'application/xml')
 
   const testPackage = new Package(xmlDoc)
   expect(testPackage.version()).toBe('3.0')

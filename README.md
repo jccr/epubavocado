@@ -10,7 +10,7 @@ I am an [EPUB 3.2](https://www.w3.org/publishing/epub3/index.html) object model 
 - [ ] Works in browser
 - [x] Runs in Node.js
 - [ ] Runs in [Deno](https://deno.land/)
-- [ ] Types
+- [x] Types
 - [ ] Test suite
 - [ ] Benchmarks
 - [x] [3.4.1 The `package` Element](https://www.w3.org/publishing/epub32/epub-packages.html#sec-package-elem)

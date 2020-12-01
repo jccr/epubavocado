@@ -1,7 +1,7 @@
-import xmldom from 'https://cdn.skypack.dev/xmldom'
+import xmldom from 'https://jspm.dev/xmldom'
 import { assertEquals } from 'https://deno.land/std@0.79.0/testing/asserts.ts'
 
-import { Package } from '../../src/package.ts'
+import { Package } from '../../lib/esm/mod.js'
 
 Deno.test('initializes Package', () => {
   const xmlDoc = new xmldom.DOMParser().parseFromString(
