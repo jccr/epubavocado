@@ -9,7 +9,6 @@ I am an [EPUB 3.2](https://www.w3.org/publishing/epub3/index.html) object model 
 ## Features
 - [ ] Documentation
 - [x] Types
-  - [ ] TypeScript strict
 - [ ] Test suite
 - [ ] Benchmarks
 - [ ] Performance tuning

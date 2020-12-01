@@ -16,9 +16,7 @@ it('initializes Package', async () => {
     readFileSync(join(__dirname, '../data/input.opf'), 'utf-8'),
   )
 
-  const {
-    data: { package: testPackage },
-  } = await graphql(
+  const result = await graphql(
     buildASTSchema(mergeTypeDefs(typesArray)),
     `
       {
@@ -37,6 +35,8 @@ it('initializes Package', async () => {
       },
     },
   )
+
+  const testPackage = result.data?.package
 
   expect(testPackage.version).toBe('3.0')
 

@@ -1,3 +1,4 @@
+import { Constructor } from '../mixins/constructor.js'
 import { Entity } from '../mixins/entity.js'
 import { I18n } from '../mixins/i18n.js'
 import { ID } from '../mixins/id.js'
@@ -7,11 +8,13 @@ import { PropertiesList } from '../mixins/properties-list.js'
 import { Refines } from '../mixins/refines.js'
 import { Resource } from '../mixins/resource.js'
 import { Value } from '../mixins/value.js'
-import { toArray } from '../util.js'
+import { Maybe, toArray } from '../util.js'
 import { select } from '../xpath.js'
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export const nodeTypeMap = () => ({
+export const nodeTypeMap: () => {
+  [prefix: string]: Constructor<Entity>
+} = () => ({
   'opf:package': Package,
   'opf:metadata': Metadata,
   'opf:manifest': Manifest,
@@ -40,7 +43,7 @@ export const nodeTypeMap = () => ({
 
 const attributeFilter = (
   attribute: string,
-  values: string | string[] | null,
+  values?: string | string[],
   operator = 'or',
 ) =>
   values && values.length
@@ -51,8 +54,8 @@ const attributeFilter = (
 
 const attributeContainsWordFilter = (
   attribute: string,
-  words: string | string[],
-  operator: string,
+  words?: string | string[],
+  operator = 'or',
 ) =>
   words && words.length
     ? `[${toArray(words)
@@ -63,16 +66,16 @@ const attributeContainsWordFilter = (
         .join(` ${operator} `)}]`
     : ''
 
-const idFilter = (id: string | string[]) => attributeFilter('@id', id)
+const idFilter = (id?: string | string[]) => attributeFilter('@id', id)
 
-const anyPropertiesFilter = (anyProperties: string[]) =>
+const anyPropertiesFilter = (anyProperties?: string[]) =>
   attributeContainsWordFilter('@properties', anyProperties, 'or')
-const allPropertiesFilter = (allProperties: string[]) =>
+const allPropertiesFilter = (allProperties?: string[]) =>
   attributeContainsWordFilter('@properties', allProperties, 'and')
 
-const anyRelFilter = (anyProperties: string[]) =>
+const anyRelFilter = (anyProperties?: string[]) =>
   attributeContainsWordFilter('@rel', anyProperties, 'or')
-const allRelFilter = (allProperties: string[]) =>
+const allRelFilter = (allProperties?: string[]) =>
   attributeContainsWordFilter('@rel', allProperties, 'and')
 
 export class Meta extends MetaProperties(
@@ -88,15 +91,15 @@ export class Spine extends ID(Entity) {
     return 'Spine'
   }
 
-  pageProgressionDirection(): string {
+  pageProgressionDirection(): Maybe<string> {
     return this._resolve('./@page-progression-direction')
   }
 
-  toc(): ManifestItem {
+  toc(): Maybe<ManifestItem> {
     const idref = this._resolve('./@toc')
     if (idref) {
       return toArray(
-        (this._context as Package).manifest().item({ id: idref }),
+        (this._context as Package).manifest()?.item({ id: idref }),
       )[0]
     }
   }
@@ -120,7 +123,7 @@ export class Spine extends ID(Entity) {
         anyProperties,
         allProperties,
         onlyProperties,
-      }).filter((item) => item.linear() === linear)
+      })?.filter((item) => item.linear() === linear)
     }
 
     if (onlyProperties) {
@@ -128,7 +131,7 @@ export class Spine extends ID(Entity) {
         id,
         anyProperties,
         allProperties: onlyProperties,
-      }).filter(
+      })?.filter(
         (item) => toArray(item.properties()).length === onlyProperties.length,
       )
     }
@@ -146,11 +149,11 @@ export class SpineItem extends PropertiesList(ID(Entity)) {
     return 'SpineItem'
   }
 
-  idref(): ManifestItem {
+  idref(): Maybe<ManifestItem> {
     const idref = this._resolve('./@idref')
     if (idref) {
       return toArray(
-        (this._context as Package).manifest().item({ id: idref }),
+        (this._context as Package).manifest()?.item({ id: idref }),
       )[0]
     }
   }
@@ -169,20 +172,20 @@ export class ManifestItem extends Resource(PropertiesList(ID(Entity))) {
     return 'ManifestItem'
   }
 
-  mediaOverlay(): ManifestItem {
+  mediaOverlay(): Maybe<ManifestItem> {
     const idref = this._resolve('./@media-overlay')
     if (idref) {
       return toArray(
-        (this._context as Package).manifest().item({ id: idref }),
+        (this._context as Package).manifest()?.item({ id: idref }),
       )[0]
     }
   }
 
-  fallback(): ManifestItem {
+  fallback(): Maybe<ManifestItem> {
     const idref = this._resolve('./@fallback')
     if (idref) {
       return toArray(
-        (this._context as Package).manifest().item({ id: idref }),
+        (this._context as Package).manifest()?.item({ id: idref }),
       )[0]
     }
   }
@@ -211,7 +214,7 @@ export class Manifest extends ID(Entity) {
         id,
         anyProperties,
         allProperties: onlyProperties,
-      }).filter(
+      })?.filter(
         (item) => toArray(item.properties()).length === onlyProperties.length,
       )
     }
@@ -232,7 +235,7 @@ export class Identifier extends Value(MetaProperties(ID(Entity))) {
     return 'Identifier'
   }
 
-  identifierType(): Meta {
+  identifierType(): Maybe<Meta> {
     return this._resolveMetaProperty('identifier-type')
   }
 }
@@ -242,7 +245,7 @@ export class Title extends Value(I18n(MetaProperties(ID(Entity)))) {
     return 'Title'
   }
 
-  titleType(): Meta {
+  titleType(): Maybe<Meta> {
     return this._resolveMetaProperty('title-type')
   }
 }
@@ -258,7 +261,7 @@ export class Contributor extends Value(I18n(MetaProperties(ID(Entity)))) {
     return 'Contributor'
   }
 
-  role(): Meta {
+  role(): Maybe<Meta> {
     return this._resolveMetaProperty('role')
   }
 }
@@ -316,7 +319,7 @@ export class Source extends Identifier {
     return 'Source'
   }
 
-  sourceOf(): Meta {
+  sourceOf(): Maybe<Meta> {
     return this._resolveMetaProperty('source-of')
   }
 }
@@ -326,11 +329,11 @@ export class Subject extends Value(I18n(MetaProperties(ID(Entity)))) {
     return 'Subject'
   }
 
-  authority(): Meta {
+  authority(): Maybe<Meta> {
     return this._resolveMetaProperty('authority')
   }
 
-  term(): Meta {
+  term(): Maybe<Meta> {
     return this._resolveMetaProperty('term')
   }
 }
@@ -348,11 +351,11 @@ export class BelongsToCollection extends Value(
     return 'BelongsToCollection'
   }
 
-  identifier(): Meta {
+  identifier(): Maybe<Meta> {
     return this._resolveMetaProperty('dcterms:identifier')
   }
 
-  collectionType(): Meta {
+  collectionType(): Maybe<Meta> {
     return this._resolveMetaProperty('collection-type')
   }
 
@@ -375,6 +378,7 @@ export class Link extends Resource(PropertiesList(Refines(ID(Entity)))) {
       // normalize spaces and split space separated words
       return rel.replace(/\s+/g, ' ').split(' ')
     }
+    return []
   }
 }
 
@@ -394,25 +398,32 @@ export class Metadata extends ID(Entity) {
 
     this._metaPropertyMap = {}
 
-    const metaRefiningNodes = toArray(
+    const metaRefiningSelected = toArray(
       this._selectAll('./opf:meta[@refines and @property]'),
     )
 
-    metaRefiningNodes.forEach((node: Node) => {
+    metaRefiningSelected.forEach((selectedValue) => {
+      const node = selectedValue as Node
+      if (!node) {
+        return
+      }
+
       const refinesAttr = select('./@refines', node)
       if (!refinesAttr) {
         return
       }
+
       const refinesValue = (refinesAttr as Attr).value
 
       // drop the # prefix
       const idRefined =
         refinesValue[0] === '#' ? refinesValue.substr(1) : refinesValue
 
-      const propertyAttr = select('./@property', node as Node)
+      const propertyAttr = select('./@property', node)
       if (!propertyAttr) {
         return
       }
+
       const property = (propertyAttr as Attr).value
 
       if (!this._metaPropertyMap[idRefined]) {
@@ -455,11 +466,11 @@ export class Metadata extends ID(Entity) {
     return metaNodes.map((node: Node) => new constructor(node, this._context))
   }
 
-  identifier({ id }: { id?: string | string[] }): Identifier {
+  identifier({ id }: { id?: string | string[] }): Maybe<Identifier> {
     return this._resolve(`./dc:identifier${idFilter(id)}`, Identifier)
   }
 
-  modified(): Meta {
+  modified(): Maybe<Meta> {
     const node = this._select(
       "./opf:meta[@property='dcterms:modified' and not(@refines)]",
     ) as Node
@@ -551,7 +562,11 @@ export class Metadata extends ID(Entity) {
         '@property',
         property,
         'and',
-      )}${attributeFilter('@refines', refines ? `#${refines}` : null, 'or')}`,
+      )}${attributeFilter(
+        '@refines',
+        refines ? `#${refines}` : undefined,
+        'or',
+      )}`,
       Meta,
     )
   }
@@ -605,48 +620,47 @@ export class Metadata extends ID(Entity) {
 }
 
 export class Package extends I18n(ID(Entity)) {
-  private _metadata: Metadata
-  private _spine: Spine
-  private _manifest: Manifest
+  private _metadata: Maybe<Metadata>
+  private _spine: Maybe<Spine>
+  private _manifest: Maybe<Manifest>
 
   get __typename(): string {
     return 'Package'
   }
 
   constructor(doc: Node) {
-    super(select('/opf:package', doc) as Node, null)
-    this._context = this
+    super(select('/opf:package', doc) as Node)
   }
 
-  version(): string {
+  version(): Maybe<string> {
     return this._resolve('./@version')
   }
 
-  uniqueIdentifier(): Identifier {
+  uniqueIdentifier(): Maybe<Identifier> {
     const uniqueIdentifierIDRef = this._resolve('./@unique-identifier')
     if (uniqueIdentifierIDRef) {
-      return this.metadata().identifier({ id: uniqueIdentifierIDRef })
+      return this.metadata()?.identifier({ id: uniqueIdentifierIDRef })
     }
   }
 
-  releaseIdentifier(): string {
+  releaseIdentifier(): Maybe<string> {
     const uniqueIdentifier = this.uniqueIdentifier()
-    const modified = this.metadata().modified()
+    const modified = this.metadata()?.modified()
     if (uniqueIdentifier && modified) {
       return `${uniqueIdentifier.value()}@${modified.value()}`
     }
   }
 
-  metadata(): Metadata {
+  metadata(): Maybe<Metadata> {
     return (this._metadata =
       this._metadata || this._resolve('./opf:metadata', Metadata))
   }
 
-  spine(): Spine {
+  spine(): Maybe<Spine> {
     return (this._spine = this._spine || this._resolve('./opf:spine', Spine))
   }
 
-  manifest(): Manifest {
+  manifest(): Maybe<Manifest> {
     return (this._manifest =
       this._manifest || this._resolve('./opf:manifest', Manifest))
   }

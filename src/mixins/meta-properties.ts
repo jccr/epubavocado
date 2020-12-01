@@ -10,15 +10,21 @@ export function MetaProperties<TBase extends EntityConstructor>(Base: TBase) {
     }
 
     _resolveMetaPropertyList(property: string, constructor = Meta) {
+      const id = ((this as unknown) as Meta).id()
+      if (!id) {
+        return []
+      }
+
       const propertyMap = (this._context as Package).metadata()
-        ._metaPropertyMap[((this as unknown) as Meta).id()]
+        ?._metaPropertyMap[id]
+
       if (!propertyMap) {
-        return null
+        return []
       }
 
       const metaNodes = propertyMap[property]
       if (!metaNodes) {
-        return null
+        return []
       }
 
       return metaNodes.map((node: Node) => new constructor(node, this._context))

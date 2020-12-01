@@ -7,3 +7,5 @@ export const toArray = <T>(valueOrArray: T | T[]): T[] => {
   }
   return [valueOrArray]
 }
+
+export type Maybe<T> = null | undefined | T

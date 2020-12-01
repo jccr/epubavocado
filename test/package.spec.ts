@@ -14,6 +14,6 @@ it('initializes Package', () => {
   expect(testPackage.version()).toBe('3.0')
 
   const uniqueIdentifier = testPackage.uniqueIdentifier()
-  expect(uniqueIdentifier.id()).toBe('pub-id')
-  expect(uniqueIdentifier.value()).toBe('urn:isbn:9780316000000')
+  expect(uniqueIdentifier?.id()).toBe('pub-id')
+  expect(uniqueIdentifier?.value()).toBe('urn:isbn:9780316000000')
 })

@@ -20,6 +20,10 @@ export function Refines<TBase extends EntityConstructor>(Base: TBase) {
 
       const name = node.localName
       const namespace = node.namespaceURI
+      if (!namespace) {
+        return null
+      }
+
       const prefix = prefixMap[namespace]
       const typeConstructor = nodeTypeMap()[`${prefix}:${name}`]
       if (!typeConstructor) {

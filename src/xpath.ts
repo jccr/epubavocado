@@ -1,4 +1,5 @@
 import xpath from 'xpath'
+import { Maybe } from './util.js'
 
 export const namespaceMap = {
   xml: 'http://www.w3.org/XML/1998/namespace',
@@ -10,7 +11,7 @@ export const selectAll = xpath.useNamespaces(namespaceMap)
 export const select = function (
   expression: string,
   node: Node,
-): xpath.SelectedValue {
+): Maybe<xpath.SelectedValue> {
   return selectAll(expression, node, true)
 }
 
@@ -23,7 +24,7 @@ export const select = function (
  *  }
  * ```
  */
-export const prefixMap = Object.assign(
+export const prefixMap: { [namespace: string]: string } = Object.assign(
   {},
   ...Object.entries(namespaceMap).map(([prefix, namespace]) => ({
     [namespace]: prefix,
