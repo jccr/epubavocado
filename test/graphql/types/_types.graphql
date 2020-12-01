@@ -1,0 +1,277 @@
+type Meta implements Node & Value & I18n & Refines & MetaAttributes & MetaProperties {
+  id: ID
+
+  value: String
+
+  dir: String
+  lang: String
+
+  refines: Node
+
+  property: String
+  scheme: String
+
+  alternateScript: [Meta]
+  displaySeq: Meta
+  fileAs: Meta
+  groupPosition: Meta
+  metaAuth: Meta @deprecated
+}
+
+type Identifier implements Node & Value & MetaProperties {
+  id: ID
+
+  value: String
+
+  alternateScript: [Meta]
+  displaySeq: Meta
+  fileAs: Meta
+  groupPosition: Meta
+  metaAuth: Meta @deprecated
+
+  identifierType: Meta
+}
+
+type Title implements Node & Value & I18n & MetaProperties {
+  id: ID
+
+  value: String
+
+  dir: String
+  lang: String
+
+  alternateScript: [Meta]
+  displaySeq: Meta
+  fileAs: Meta
+  groupPosition: Meta
+  metaAuth: Meta @deprecated
+
+  titleType: Meta
+}
+
+type Language implements Node & Value & MetaProperties {
+  id: ID
+
+  value: String
+
+  alternateScript: [Meta]
+  displaySeq: Meta
+  fileAs: Meta
+  groupPosition: Meta
+  metaAuth: Meta @deprecated
+}
+
+type Contributor implements Node & Value & I18n & MetaProperties {
+  id: ID
+
+  value: String
+
+  dir: String
+  lang: String
+
+  alternateScript: [Meta]
+  displaySeq: Meta
+  fileAs: Meta
+  groupPosition: Meta
+  metaAuth: Meta @deprecated
+
+  role: Meta
+}
+
+type Coverage implements Node & Value & I18n & MetaProperties {
+  id: ID
+
+  value: String
+
+  dir: String
+  lang: String
+
+  alternateScript: [Meta]
+  displaySeq: Meta
+  fileAs: Meta
+  groupPosition: Meta
+  metaAuth: Meta @deprecated
+}
+
+type Creator implements Node & Value & I18n & MetaProperties {
+  id: ID
+
+  value: String
+
+  dir: String
+  lang: String
+
+  alternateScript: [Meta]
+  displaySeq: Meta
+  fileAs: Meta
+  groupPosition: Meta
+  metaAuth: Meta @deprecated
+
+  role: Meta
+}
+
+type Date implements Node & Value & MetaProperties {
+  id: ID
+
+  value: String
+
+  alternateScript: [Meta]
+  displaySeq: Meta
+  fileAs: Meta
+  groupPosition: Meta
+  metaAuth: Meta @deprecated
+}
+
+type Description implements Node & Value & I18n & MetaProperties {
+  id: ID
+
+  value: String
+
+  dir: String
+  lang: String
+
+  alternateScript: [Meta]
+  displaySeq: Meta
+  fileAs: Meta
+  groupPosition: Meta
+  metaAuth: Meta @deprecated
+}
+
+type Format implements Node & Value & MetaProperties {
+  id: ID
+
+  value: String
+
+  alternateScript: [Meta]
+  displaySeq: Meta
+  fileAs: Meta
+  groupPosition: Meta
+  metaAuth: Meta @deprecated
+}
+
+type Publisher implements Node & Value & I18n & MetaProperties {
+  id: ID
+
+  value: String
+
+  dir: String
+  lang: String
+
+  alternateScript: [Meta]
+  displaySeq: Meta
+  fileAs: Meta
+  groupPosition: Meta
+  metaAuth: Meta @deprecated
+}
+
+type Relation implements Node & Value & I18n & MetaProperties {
+  id: ID
+
+  value: String
+
+  dir: String
+  lang: String
+
+  alternateScript: [Meta]
+  displaySeq: Meta
+  fileAs: Meta
+  groupPosition: Meta
+  metaAuth: Meta @deprecated
+}
+
+type Rights implements Node & Value & I18n & MetaProperties {
+  id: ID
+
+  value: String
+
+  dir: String
+  lang: String
+
+  alternateScript: [Meta]
+  displaySeq: Meta
+  fileAs: Meta
+  groupPosition: Meta
+  metaAuth: Meta @deprecated
+}
+
+type Source implements Node & Value & MetaProperties {
+  id: ID
+
+  value: String
+
+  alternateScript: [Meta]
+  displaySeq: Meta
+  fileAs: Meta
+  groupPosition: Meta
+  metaAuth: Meta @deprecated
+
+  identifierType: Meta
+  sourceOf: Meta
+}
+
+type Subject implements Node & Value & I18n & MetaProperties {
+  id: ID
+
+  value: String
+
+  dir: String
+  lang: String
+
+  alternateScript: [Meta]
+  displaySeq: Meta
+  fileAs: Meta
+  groupPosition: Meta
+  metaAuth: Meta @deprecated
+
+  authority: Meta
+  term: Meta
+}
+
+type Type implements Node & Value & MetaProperties {
+  id: ID
+
+  value: String
+
+  alternateScript: [Meta]
+  displaySeq: Meta
+  fileAs: Meta
+  groupPosition: Meta
+  metaAuth: Meta @deprecated
+}
+
+type BelongsToCollection implements Node & Value & I18n & Refines & MetaAttributes & MetaProperties {
+  id: ID
+
+  value: String
+
+  dir: String
+  lang: String
+
+  refines: Node
+
+  property: String
+  scheme: String
+
+  alternateScript: [Meta]
+  displaySeq: Meta
+  fileAs: Meta
+  groupPosition: Meta
+  metaAuth: Meta @deprecated
+
+  identifier: Meta
+  collectionType: Meta
+  belongsToCollection: [BelongsToCollection]
+}
+
+type Link implements Node & Resource & PropertiesList & Refines {
+  id: ID
+
+  href: String
+  mediaType: String
+
+  properties: [String]
+
+  refines: Node
+
+  rel: [String]
+}

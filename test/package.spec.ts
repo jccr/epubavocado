@@ -1,11 +1,13 @@
 import { readFileSync } from 'fs'
+import { join } from 'path'
+
 import xmldom from 'xmldom'
 
 import { Package } from '../src/mod.js'
 
 it('initializes Package', () => {
   const xmlDoc = new xmldom.DOMParser().parseFromString(
-    readFileSync('test/data/input.opf', 'utf-8'),
+    readFileSync(join(__dirname, 'data/input.opf'), 'utf-8'),
   )
 
   const testPackage = new Package(xmlDoc)

@@ -1,0 +1,103 @@
+type Metadata {
+  identifier: Identifier
+  modified: Meta
+
+  title(id: [ID]): [Title]
+  language(id: [ID]): [Language]
+
+  contributor(id: [ID]): [Contributor]
+  coverage(id: [ID]): [Coverage]
+  creator(id: [ID]): [Creator]
+  date(id: [ID]): [Date]
+  description(id: [ID]): [Description]
+  format(id: [ID]): [Format]
+  publisher(id: [ID]): [Publisher]
+  relation(id: [ID]): [Relation]
+  rights(id: [ID]): [Rights]
+  source(id: [ID]): [Source]
+  subject(id: [ID]): [Subject]
+  type(id: [ID]): [Type]
+
+  belongsToCollection(id: [ID]): [BelongsToCollection]
+
+  meta(id: [ID], property: String, refines: ID): [Meta]
+
+  link(
+    id: [ID]
+    href: String
+    anyProperties: [String]
+    allProperties: [String]
+    onlyProperties: [String]
+    anyRel: [String]
+    allRel: [String]
+    onlyRel: [String]
+  ): [Link]
+}
+
+type ManifestItem implements Node & Resource & PropertiesList {
+  id: ID
+
+  href: String
+  mediaType: String
+
+  properties: [String]
+
+  mediaOverlay: ManifestItem
+  fallback: ManifestItem
+}
+
+type Manifest implements Node {
+  id: ID
+
+  item(
+    id: [ID]
+    href: String
+    anyProperties: [String]
+    allProperties: [String]
+    onlyProperties: [String]
+  ): [ManifestItem]
+}
+
+type SpineItem implements Node & PropertiesList {
+  id: ID
+
+  properties: [String]
+
+  idref: ManifestItem
+  linear: Boolean
+}
+
+type Spine implements Node {
+  id: ID
+
+  pageProgressionDirection: String
+  toc: ManifestItem
+  itemref(
+    id: [ID]
+    anyProperties: [String]
+    allProperties: [String]
+    onlyProperties: [String]
+    linear: Boolean
+  ): [SpineItem]
+}
+
+type Package implements Node & I18n {
+  id: ID
+
+  dir: String
+  lang: String
+
+  prefix: [String]
+
+  version: String
+  uniqueIdentifier: Identifier
+  releaseIdentifier: String
+
+  metadata: Metadata
+  manifest: Manifest
+  spine: Spine
+}
+
+type Query {
+  package: Package
+}

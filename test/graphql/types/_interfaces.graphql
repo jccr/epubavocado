@@ -1,0 +1,38 @@
+interface Node {
+  id: ID
+}
+
+interface I18n {
+  dir: String
+  lang: String
+}
+
+interface Value {
+  value: String
+}
+
+interface Refines {
+  refines: Node
+}
+
+interface MetaAttributes {
+  property: String
+  scheme: String
+}
+
+interface MetaProperties {
+  alternateScript: [Meta]
+  displaySeq: Meta
+  fileAs: Meta
+  groupPosition: Meta
+  metaAuth: Meta @deprecated
+}
+
+interface Resource {
+  href: String
+  mediaType: String
+}
+
+interface PropertiesList {
+  properties: [String]
+}
