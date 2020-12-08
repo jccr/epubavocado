@@ -51,7 +51,7 @@ I am an [EPUB 3.2](https://www.w3.org/publishing/epub3/index.html) object model 
 
 ### Node.js
 
-See this [example](https://github.com/jccr/epubavocado/blob/main/test/package.test.ts) from the tests.
+See this [example](https://github.com/jccr/epubavocado/blob/main/test/package.spec.ts) from the tests.
 
 ### GraphQL.js
 
