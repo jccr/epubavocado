@@ -36,6 +36,8 @@ it('initializes Package', async () => {
     },
   )
 
+  expect(result.data).toBeDefined()
+
   const testPackage = result.data?.package
 
   expect(testPackage.version).toBe('3.0')

@@ -21,7 +21,7 @@ I am an [EPUB 3.2](https://www.w3.org/publishing/epub3/index.html) object model 
 
 ### Standards-compliance
 - [EPUB Open Container Format (OCF) 3.2](https://www.w3.org/publishing/epub32/epub-ocf.html)
-  - [ ] [3.5.2.1 Container File (`container.xml`)](https://www.w3.org/publishing/epub32/epub-ocf.html#sec-container-metainf-container.xml)
+  - [x] [3.5.2.1 Container File (`container.xml`)](https://www.w3.org/publishing/epub32/epub-ocf.html#sec-container-metainf-container.xml)
 - [EPUB Packages 3.2](https://www.w3.org/publishing/epub32/epub-packages.html)
   - [x] [3.4.1 The `package` Element](https://www.w3.org/publishing/epub32/epub-packages.html#sec-package-elem)
   - [x] [3.4.2 Shared Attributes](https://www.w3.org/publishing/epub32/epub-packages.html#sec-shared-attrs)

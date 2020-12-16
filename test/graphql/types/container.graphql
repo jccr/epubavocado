@@ -1,0 +1,22 @@
+type ContainerLink implements Resource {
+  href: String
+  mediaType: String
+  rel: [String]
+}
+
+type Rootfile {
+  fullPath: String
+  mediaType: String
+}
+
+type Container {
+  version: String
+  rootfiles: [Rootfile]
+  links: [ContainerLink]
+
+  defaultRendition: Rootfile
+}
+
+type Query {
+  container: Container
+}

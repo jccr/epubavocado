@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<container version="1.0" xmlns="urn:oasis:names:tc:opendocument:xmlns:container">
+  <rootfiles>
+    <rootfile full-path="default.opf" media-type="application/oebps-package+xml" />
+    <rootfile full-path="other.opf" media-type="application/oebps-package+xml" />
+  </rootfiles>
+  <links>
+    <link href="mapping.xhtml" rel="mapping" media-type="application/xhtml+xml" />
+  </links>
+</container>

@@ -8,7 +8,7 @@ import { PropertiesList } from '../mixins/properties-list.js'
 import { Refines } from '../mixins/refines.js'
 import { Resource } from '../mixins/resource.js'
 import { Value } from '../mixins/value.js'
-import { Maybe, toArray } from '../util.js'
+import { Maybe, splitRelAttribute, toArray } from '../util.js'
 import { select } from '../xpath.js'
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -375,8 +375,7 @@ export class Link extends Resource(PropertiesList(Refines(ID(Entity)))) {
   rel(): string[] {
     const rel = this._resolve('./@rel') as string
     if (rel) {
-      // normalize spaces and split space separated words
-      return rel.replace(/\s+/g, ' ').split(' ')
+      return splitRelAttribute(rel)
     }
     return []
   }
