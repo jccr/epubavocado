@@ -22,6 +22,18 @@ module.exports = function (config) {
     reporters: ['progress', 'karma-typescript'],
     browsers: ['ChromeHeadless'],
     karmaTypescriptConfig: {
+      coverageOptions: {
+        instrumentation: false,
+      },
+      compilerOptions: {
+        target: 'es5',
+        module: 'CommonJS',
+        moduleResolution: 'node',
+        strict: true,
+        esModuleInterop: true,
+        skipLibCheck: true,
+        forceConsistentCasingInFileNames: true,
+      },
       include: ['src/', 'test/__browser__/'],
     },
   })
