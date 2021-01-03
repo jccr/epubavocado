@@ -14,7 +14,8 @@ I am an [EPUB 3.2](https://www.w3.org/publishing/epub3/index.html) object model 
 - [ ] Performance tuning
 
 ### Runtime support
-- [ ] Browser
+- [x] Browser
+  - [ ] Native XPath
 - [x] Node.js
 - [ ] [Deno](https://deno.land/)
 - [x] [GraphQL.js](https://graphql.org/graphql-js/)
