@@ -10,7 +10,7 @@ const { mergeTypeDefs } = require('@graphql-tools/merge')
 
 const xmldom = require('xmldom')
 
-const { Package, Container } = require('../../lib/cjs/mod.js')
+const { Package, Container } = require('../../lib/cjs/models.js')
 
 const typesArray = loadFilesSync(join(__dirname, 'types/**/*.graphql'))
 
