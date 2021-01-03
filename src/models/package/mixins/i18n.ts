@@ -1,4 +1,4 @@
-import type { EntityConstructor } from './entity.js'
+import type { EntityConstructor } from '../../mixins/entity.js'
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export function I18n<TBase extends EntityConstructor>(Base: TBase) {

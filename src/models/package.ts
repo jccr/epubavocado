@@ -1,18 +1,28 @@
-import { Constructor } from '../mixins/constructor.js'
-import { Entity } from '../mixins/entity.js'
-import { I18n } from '../mixins/i18n.js'
-import { ID } from '../mixins/id.js'
-import { MetaAttributes } from '../mixins/meta-attributes.js'
-import { MetaProperties } from '../mixins/meta-properties.js'
-import { Properties } from '../mixins/properties.js'
-import { Refines } from '../mixins/refines.js'
-import { Resource } from '../mixins/resource.js'
-import { Value } from '../mixins/value.js'
+import { Constructor } from './mixins/constructor.js'
+import { Entity, EntityConstructor } from './mixins/entity.js'
+import { I18n } from './package/mixins/i18n.js'
+import { ID } from './package/mixins/id.js'
+import { Properties } from './package/mixins/properties.js'
+import { Resource } from './mixins/resource.js'
+import { Value } from './package/mixins/value.js'
 import { Maybe, splitRelAttribute, toArray } from '../util.js'
-import { select } from '../xpath.js'
+import { prefixMap, select } from '../xpath.js'
+import { ManifestItem } from './package/manifest-item.js'
+import { Manifest } from './package/manifest.js'
+import { SpineItem } from './package/spine-item.js'
+import { Spine } from './package/spine.js'
+import {
+  idFilter,
+  attributeFilter,
+  anyPropertiesFilter,
+  allPropertiesFilter,
+  anyRelFilter,
+  allRelFilter,
+} from './package/util.js'
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export const nodeTypeMap: () => {
+export { ManifestItem, Manifest, SpineItem, Spine }
+
+const nodeTypeMap: () => {
   [prefix: string]: Constructor<Entity>
 } = () => ({
   'opf:package': Package,
@@ -41,209 +51,106 @@ export const nodeTypeMap: () => {
   'dc:type': Type,
 })
 
-const attributeFilter = (
-  attribute: string,
-  values?: string | string[],
-  operator = 'or',
-) =>
-  values && values.length
-    ? `[${toArray(values)
-        .map((value) => `${attribute}='${value}'`)
-        .join(` ${operator} `)}]`
-    : ''
+function MetaProperties<TBase extends EntityConstructor>(Base: TBase) {
+  return class MetaProperties extends Base {
+    _resolveMetaProperty(property: string, constructor = Meta) {
+      return toArray(this._resolveMetaPropertyList(property, constructor))[0]
+    }
 
-const attributeContainsWordFilter = (
-  attribute: string,
-  words?: string | string[],
-  operator = 'or',
-) =>
-  words && words.length
-    ? `[${toArray(words)
-        .map(
-          (value) =>
-            `contains(concat(' ', normalize-space(${attribute}), ' '), ' ${value} ')`,
-        )
-        .join(` ${operator} `)}]`
-    : ''
+    _resolveMetaPropertyList(property: string, constructor = Meta) {
+      const id = ((this as unknown) as Meta).id()
+      if (!id) {
+        return []
+      }
 
-const idFilter = (id?: string | string[]) => attributeFilter('@id', id)
+      const propertyMap = (this._context as Package).metadata()
+        ?._metaPropertyMap[id]
 
-const anyPropertiesFilter = (anyProperties?: string[]) =>
-  attributeContainsWordFilter('@properties', anyProperties, 'or')
-const allPropertiesFilter = (allProperties?: string[]) =>
-  attributeContainsWordFilter('@properties', allProperties, 'and')
+      if (!propertyMap) {
+        return []
+      }
 
-const anyRelFilter = (anyProperties?: string[]) =>
-  attributeContainsWordFilter('@rel', anyProperties, 'or')
-const allRelFilter = (allProperties?: string[]) =>
-  attributeContainsWordFilter('@rel', allProperties, 'and')
+      const metaNodes = propertyMap[property]
+      if (!metaNodes) {
+        return []
+      }
+
+      return metaNodes.map((node: Node) => new constructor(node, this._context))
+    }
+
+    alternateScript() {
+      return this.alternateScripts()[0]
+    }
+
+    alternateScripts() {
+      return this._resolveMetaPropertyList('alternate-script')
+    }
+
+    displaySeq() {
+      return this._resolveMetaProperty('display-seq')
+    }
+
+    fileAs() {
+      return this._resolveMetaProperty('file-as')
+    }
+
+    groupPosition() {
+      return this._resolveMetaProperty('group-position')
+    }
+
+    metaAuth() {
+      return this._resolveMetaProperty('meta-auth')
+    }
+  }
+}
+
+function MetaAttributes<TBase extends EntityConstructor>(Base: TBase) {
+  return class MetaAttributes extends Base {
+    property() {
+      return this._resolve('./@property')
+    }
+
+    scheme() {
+      return this._resolve('./@scheme')
+    }
+  }
+}
+
+function Refines<TBase extends EntityConstructor>(Base: TBase) {
+  return class Refines extends Base {
+    refines() {
+      const refines = this._resolve('./@refines') as string
+      if (!refines) {
+        return null
+      }
+
+      // drop the # prefix
+      const idRefined = refines[0] === '#' ? refines.substr(1) : refines
+      const node = this._context._select(`//*[@id='${idRefined}']`) as Attr
+      if (!node) {
+        return null
+      }
+
+      const name = node.localName
+      const namespace = node.namespaceURI
+      if (!namespace) {
+        return null
+      }
+
+      const prefix = prefixMap[namespace]
+      const typeConstructor = nodeTypeMap()[`${prefix}:${name}`]
+      if (!typeConstructor) {
+        return null
+      }
+
+      return new typeConstructor(node, this._context)
+    }
+  }
+}
 
 export class Meta extends MetaProperties(
   MetaAttributes(Refines(I18n(Value(ID(Entity))))),
 ) {}
-
-const resolveIdref = (entity: Entity, idref: Maybe<string>) => {
-  if (!idref) {
-    return null
-  }
-  return (entity._context as Package).manifest()?.item({ id: idref })
-}
-
-export class Spine extends ID(Entity) {
-  pageProgressionDirection(): Maybe<string> {
-    return this._resolve('./@page-progression-direction')
-  }
-
-  toc(): Maybe<ManifestItem> {
-    const idref = this._resolve('./@toc')
-    return resolveIdref(this, idref)
-  }
-
-  itemref({
-    id,
-    anyProperties,
-    allProperties,
-    onlyProperties,
-    linear,
-  }: {
-    id?: string
-    anyProperties?: string[]
-    allProperties?: string[]
-    onlyProperties?: string[]
-    linear?: boolean
-  } = {}): Maybe<SpineItem> {
-    return this.itemrefs({
-      ids: id ? [id] : [],
-      anyProperties,
-      allProperties,
-      onlyProperties,
-      linear,
-    })[0]
-  }
-
-  itemrefs({
-    ids,
-    anyProperties,
-    allProperties,
-    onlyProperties,
-    linear,
-  }: {
-    ids?: string[]
-    anyProperties?: string[]
-    allProperties?: string[]
-    onlyProperties?: string[]
-    linear?: boolean
-  } = {}): SpineItem[] {
-    if (linear !== undefined) {
-      return this.itemrefs({
-        ids,
-        anyProperties,
-        allProperties,
-        onlyProperties,
-      })?.filter((item) => item.linear() === linear)
-    }
-
-    if (onlyProperties) {
-      return this.itemrefs({
-        ids,
-        anyProperties,
-        allProperties: onlyProperties,
-      })?.filter(
-        (item) => toArray(item.properties()).length === onlyProperties.length,
-      )
-    }
-
-    const expression = `./opf:itemref${idFilter(ids)}${anyPropertiesFilter(
-      anyProperties,
-    )}${allPropertiesFilter(allProperties)}`
-
-    return this._resolveAll(expression, SpineItem)
-  }
-}
-
-export class SpineItem extends Properties(ID(Entity)) {
-  idref(): Maybe<ManifestItem> {
-    const idref = this._resolve('./@idref')
-    return resolveIdref(this, idref)
-  }
-
-  linear(): boolean {
-    const linear = this._resolve('./@linear')
-    if (linear === 'no') {
-      return false
-    }
-    return true
-  }
-}
-
-export class ManifestItem extends Resource(Properties(ID(Entity))) {
-  mediaOverlay(): Maybe<ManifestItem> {
-    const idref = this._resolve('./@media-overlay')
-    return resolveIdref(this, idref)
-  }
-
-  fallback(): Maybe<ManifestItem> {
-    const idref = this._resolve('./@fallback')
-    return resolveIdref(this, idref)
-  }
-}
-
-export class Manifest extends ID(Entity) {
-  item({
-    id,
-    href,
-    anyProperties,
-    allProperties,
-    onlyProperties,
-  }: {
-    id?: string
-    href?: string
-    anyProperties?: string[]
-    allProperties?: string[]
-    onlyProperties?: string[]
-  } = {}): Maybe<ManifestItem> {
-    return this.items({
-      ids: id ? [id] : [],
-      href,
-      anyProperties,
-      allProperties,
-      onlyProperties,
-    })[0]
-  }
-
-  items({
-    ids,
-    href,
-    anyProperties,
-    allProperties,
-    onlyProperties,
-  }: {
-    ids?: string[]
-    href?: string
-    anyProperties?: string[]
-    allProperties?: string[]
-    onlyProperties?: string[]
-  } = {}): ManifestItem[] {
-    if (onlyProperties) {
-      return this.items({
-        ids: ids,
-        anyProperties,
-        allProperties: onlyProperties,
-      })?.filter(
-        (item) => toArray(item.properties()).length === onlyProperties.length,
-      )
-    }
-
-    const expression = `./opf:item${idFilter(ids)}${attributeFilter(
-      '@href',
-      href,
-    )}${anyPropertiesFilter(anyProperties)}${allPropertiesFilter(
-      allProperties,
-    )}`
-
-    return this._resolveAll(expression, ManifestItem)
-  }
-}
 
 export class Identifier extends Value(MetaProperties(ID(Entity))) {
   identifierType(): Maybe<Meta> {
@@ -386,34 +293,6 @@ export class Metadata extends ID(Entity) {
 
       this._metaPropertyMap[idRefined][property].push(node)
     })
-  }
-
-  private _resolveMetaItemProperty(
-    id: string,
-    property: string,
-    constructor = Meta,
-  ) {
-    return toArray(
-      this._resolveMetaItemPropertyAll(id, property, constructor),
-    )[0]
-  }
-
-  private _resolveMetaItemPropertyAll(
-    id: string,
-    property: string,
-    constructor = Meta,
-  ) {
-    const propertyMap = this._metaPropertyMap[id]
-    if (!propertyMap) {
-      return null
-    }
-
-    const metaNodes = propertyMap[property]
-    if (!metaNodes) {
-      return null
-    }
-
-    return metaNodes.map((node: Node) => new constructor(node, this._context))
   }
 
   identifier({ id }: { id?: string }): Maybe<Identifier> {

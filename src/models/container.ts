@@ -1,5 +1,5 @@
-import { Entity } from '../mixins/entity.js'
-import { Resource } from '../mixins/resource.js'
+import { Entity } from './mixins/entity.js'
+import { Resource } from './mixins/resource.js'
 import { Maybe, splitRelAttribute } from '../util.js'
 import { select } from '../xpath.js'
 

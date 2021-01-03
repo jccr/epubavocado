@@ -7,7 +7,7 @@ import { graphql, buildASTSchema } from 'graphql'
 import { loadFilesSync } from '@graphql-tools/load-files'
 import { mergeTypeDefs } from '@graphql-tools/merge'
 
-import { Container } from '../../src/mod.js'
+import { Container } from '../../src/models.js'
 
 const typesArray = loadFilesSync(join(__dirname, 'types/**/*.graphql'))
 

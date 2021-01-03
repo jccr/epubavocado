@@ -1,6 +1,6 @@
 import type { SelectedValue } from 'xpath'
-import { Maybe } from '../util.js'
-import { select, selectAll } from '../xpath.js'
+import { Maybe } from '../../util.js'
+import { select, selectAll } from '../../xpath.js'
 
 import { Constructor } from './constructor.js'
 

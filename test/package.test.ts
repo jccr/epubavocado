@@ -5,7 +5,7 @@ import { join } from 'path'
 
 import xmldom from 'xmldom'
 
-import { ManifestItem, Package } from '../src/mod.js'
+import { Package, ManifestItem } from '../src/models.js'
 
 describe('Package', () => {
   const xmlDoc = new xmldom.DOMParser().parseFromString(

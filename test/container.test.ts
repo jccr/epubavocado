@@ -3,7 +3,7 @@ import { join } from 'path'
 
 import xmldom from 'xmldom'
 
-import { Container } from '../src/mod.js'
+import { Container } from '../src/models.js'
 
 test('Container', () => {
   const xmlDoc = new xmldom.DOMParser().parseFromString(

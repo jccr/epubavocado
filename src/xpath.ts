@@ -1,4 +1,4 @@
-import xpath from 'xpath'
+import { useNamespaces, SelectedValue } from 'xpath'
 import { Maybe } from './util.js'
 
 export const namespaceMap = {
@@ -8,11 +8,11 @@ export const namespaceMap = {
   ocf: 'urn:oasis:names:tc:opendocument:xmlns:container',
 }
 
-export const selectAll = xpath.useNamespaces(namespaceMap)
+export const selectAll = useNamespaces(namespaceMap)
 export const select = function (
   expression: string,
   node: Node,
-): Maybe<xpath.SelectedValue> {
+): Maybe<SelectedValue> {
   return selectAll(expression, node, true)
 }
 
