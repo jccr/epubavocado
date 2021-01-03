@@ -2,6 +2,7 @@
 [![Node.js](https://github.com/jccr/epubavocado/workflows/Node.js/badge.svg)](https://github.com/jccr/epubavocado/actions?query=workflow%3ANode.js)
 [![Browser](https://github.com/jccr/epubavocado/workflows/Browser/badge.svg)](https://github.com/jccr/epubavocado/actions?query=workflow%3ABrowser)
 [![Deno](https://github.com/jccr/epubavocado/workflows/Deno/badge.svg)](https://github.com/jccr/epubavocado/actions?query=workflow%3ADeno)
+[![Coverage Status](https://coveralls.io/repos/github/jccr/epubavocado/badge.svg?branch=main)](https://coveralls.io/github/jccr/epubavocado?branch=main)
 
 # 📗epubavocado🥑
 I am an [EPUB 3.2](https://www.w3.org/publishing/epub3/index.html) object model aspiring to be standards compliant.
