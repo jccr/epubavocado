@@ -1,6 +1,6 @@
 {
   "name": "epubavocado",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "I am an EPUB object model aspiring to be standards compliant.",
   "main": "lib/cjs/models.js",
   "module": "lib/esm/models.js",
