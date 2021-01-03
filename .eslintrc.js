@@ -21,4 +21,12 @@ module.exports = {
   rules: {
     'import/extensions': [1, 'ignorePackages'],
   },
+  overrides: [
+    {
+      files: ['test/**/*.ts'],
+      rules: {
+        '@typescript-eslint/no-non-null-assertion': 'off',
+      },
+    },
+  ],
 }

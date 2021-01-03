@@ -11,7 +11,9 @@ type Meta implements Node & Value & I18n & Refines & MetaAttributes & MetaProper
   property: String
   scheme: String
 
-  alternateScript: [Meta]
+  alternateScript: Meta
+  alternateScripts: [Meta]
+
   displaySeq: Meta
   fileAs: Meta
   groupPosition: Meta
@@ -23,7 +25,9 @@ type Identifier implements Node & Value & MetaProperties {
 
   value: String
 
-  alternateScript: [Meta]
+  alternateScript: Meta
+  alternateScripts: [Meta]
+
   displaySeq: Meta
   fileAs: Meta
   groupPosition: Meta
@@ -40,7 +44,9 @@ type Title implements Node & Value & I18n & MetaProperties {
   dir: String
   lang: String
 
-  alternateScript: [Meta]
+  alternateScript: Meta
+  alternateScripts: [Meta]
+
   displaySeq: Meta
   fileAs: Meta
   groupPosition: Meta
@@ -54,7 +60,9 @@ type Language implements Node & Value & MetaProperties {
 
   value: String
 
-  alternateScript: [Meta]
+  alternateScript: Meta
+  alternateScripts: [Meta]
+
   displaySeq: Meta
   fileAs: Meta
   groupPosition: Meta
@@ -69,7 +77,9 @@ type Contributor implements Node & Value & I18n & MetaProperties {
   dir: String
   lang: String
 
-  alternateScript: [Meta]
+  alternateScript: Meta
+  alternateScripts: [Meta]
+
   displaySeq: Meta
   fileAs: Meta
   groupPosition: Meta
@@ -86,7 +96,9 @@ type Coverage implements Node & Value & I18n & MetaProperties {
   dir: String
   lang: String
 
-  alternateScript: [Meta]
+  alternateScript: Meta
+  alternateScripts: [Meta]
+
   displaySeq: Meta
   fileAs: Meta
   groupPosition: Meta
@@ -101,7 +113,9 @@ type Creator implements Node & Value & I18n & MetaProperties {
   dir: String
   lang: String
 
-  alternateScript: [Meta]
+  alternateScript: Meta
+  alternateScripts: [Meta]
+
   displaySeq: Meta
   fileAs: Meta
   groupPosition: Meta
@@ -115,7 +129,9 @@ type Date implements Node & Value & MetaProperties {
 
   value: String
 
-  alternateScript: [Meta]
+  alternateScript: Meta
+  alternateScripts: [Meta]
+
   displaySeq: Meta
   fileAs: Meta
   groupPosition: Meta
@@ -130,7 +146,9 @@ type Description implements Node & Value & I18n & MetaProperties {
   dir: String
   lang: String
 
-  alternateScript: [Meta]
+  alternateScript: Meta
+  alternateScripts: [Meta]
+
   displaySeq: Meta
   fileAs: Meta
   groupPosition: Meta
@@ -142,7 +160,9 @@ type Format implements Node & Value & MetaProperties {
 
   value: String
 
-  alternateScript: [Meta]
+  alternateScript: Meta
+  alternateScripts: [Meta]
+
   displaySeq: Meta
   fileAs: Meta
   groupPosition: Meta
@@ -157,7 +177,9 @@ type Publisher implements Node & Value & I18n & MetaProperties {
   dir: String
   lang: String
 
-  alternateScript: [Meta]
+  alternateScript: Meta
+  alternateScripts: [Meta]
+
   displaySeq: Meta
   fileAs: Meta
   groupPosition: Meta
@@ -172,7 +194,9 @@ type Relation implements Node & Value & I18n & MetaProperties {
   dir: String
   lang: String
 
-  alternateScript: [Meta]
+  alternateScript: Meta
+  alternateScripts: [Meta]
+
   displaySeq: Meta
   fileAs: Meta
   groupPosition: Meta
@@ -187,7 +211,9 @@ type Rights implements Node & Value & I18n & MetaProperties {
   dir: String
   lang: String
 
-  alternateScript: [Meta]
+  alternateScript: Meta
+  alternateScripts: [Meta]
+
   displaySeq: Meta
   fileAs: Meta
   groupPosition: Meta
@@ -199,7 +225,9 @@ type Source implements Node & Value & MetaProperties {
 
   value: String
 
-  alternateScript: [Meta]
+  alternateScript: Meta
+  alternateScripts: [Meta]
+
   displaySeq: Meta
   fileAs: Meta
   groupPosition: Meta
@@ -217,7 +245,9 @@ type Subject implements Node & Value & I18n & MetaProperties {
   dir: String
   lang: String
 
-  alternateScript: [Meta]
+  alternateScript: Meta
+  alternateScripts: [Meta]
+
   displaySeq: Meta
   fileAs: Meta
   groupPosition: Meta
@@ -232,7 +262,9 @@ type Type implements Node & Value & MetaProperties {
 
   value: String
 
-  alternateScript: [Meta]
+  alternateScript: Meta
+  alternateScripts: [Meta]
+
   displaySeq: Meta
   fileAs: Meta
   groupPosition: Meta
@@ -252,7 +284,9 @@ type BelongsToCollection implements Node & Value & I18n & Refines & MetaAttribut
   property: String
   scheme: String
 
-  alternateScript: [Meta]
+  alternateScript: Meta
+  alternateScripts: [Meta]
+
   displaySeq: Meta
   fileAs: Meta
   groupPosition: Meta
@@ -260,10 +294,12 @@ type BelongsToCollection implements Node & Value & I18n & Refines & MetaAttribut
 
   identifier: Meta
   collectionType: Meta
-  belongsToCollection: [BelongsToCollection]
+
+  belongsToCollection: BelongsToCollection
+  belongsToCollections: [BelongsToCollection]
 }
 
-type Link implements Node & Resource & PropertiesList & Refines {
+type Link implements Node & Resource & Properties & Refines {
   id: ID
 
   href: String
@@ -273,5 +309,6 @@ type Link implements Node & Resource & PropertiesList & Refines {
 
   refines: Node
 
-  rel: [String]
+  rel: String
+  rels: [String]
 }

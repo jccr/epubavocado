@@ -4,7 +4,7 @@ import { I18n } from '../mixins/i18n.js'
 import { ID } from '../mixins/id.js'
 import { MetaAttributes } from '../mixins/meta-attributes.js'
 import { MetaProperties } from '../mixins/meta-properties.js'
-import { PropertiesList } from '../mixins/properties-list.js'
+import { Properties } from '../mixins/properties.js'
 import { Refines } from '../mixins/refines.js'
 import { Resource } from '../mixins/resource.js'
 import { Value } from '../mixins/value.js'
@@ -80,28 +80,23 @@ const allRelFilter = (allProperties?: string[]) =>
 
 export class Meta extends MetaProperties(
   MetaAttributes(Refines(I18n(Value(ID(Entity))))),
-) {
-  get __typename(): string {
-    return 'Meta'
+) {}
+
+const resolveIdref = (entity: Entity, idref: Maybe<string>) => {
+  if (!idref) {
+    return null
   }
+  return (entity._context as Package).manifest()?.item({ id: idref })
 }
 
 export class Spine extends ID(Entity) {
-  get __typename(): string {
-    return 'Spine'
-  }
-
   pageProgressionDirection(): Maybe<string> {
     return this._resolve('./@page-progression-direction')
   }
 
   toc(): Maybe<ManifestItem> {
     const idref = this._resolve('./@toc')
-    if (idref) {
-      return toArray(
-        (this._context as Package).manifest()?.item({ id: idref }),
-      )[0]
-    }
+    return resolveIdref(this, idref)
   }
 
   itemref({
@@ -111,15 +106,37 @@ export class Spine extends ID(Entity) {
     onlyProperties,
     linear,
   }: {
-    id?: string | string[]
+    id?: string
     anyProperties?: string[]
     allProperties?: string[]
     onlyProperties?: string[]
     linear?: boolean
-  }): SpineItem[] {
+  } = {}): Maybe<SpineItem> {
+    return this.itemrefs({
+      ids: id ? [id] : [],
+      anyProperties,
+      allProperties,
+      onlyProperties,
+      linear,
+    })[0]
+  }
+
+  itemrefs({
+    ids,
+    anyProperties,
+    allProperties,
+    onlyProperties,
+    linear,
+  }: {
+    ids?: string[]
+    anyProperties?: string[]
+    allProperties?: string[]
+    onlyProperties?: string[]
+    linear?: boolean
+  } = {}): SpineItem[] {
     if (linear !== undefined) {
-      return this.itemref({
-        id,
+      return this.itemrefs({
+        ids,
         anyProperties,
         allProperties,
         onlyProperties,
@@ -127,8 +144,8 @@ export class Spine extends ID(Entity) {
     }
 
     if (onlyProperties) {
-      return this.itemref({
-        id,
+      return this.itemrefs({
+        ids,
         anyProperties,
         allProperties: onlyProperties,
       })?.filter(
@@ -136,7 +153,7 @@ export class Spine extends ID(Entity) {
       )
     }
 
-    const expression = `./opf:itemref${idFilter(id)}${anyPropertiesFilter(
+    const expression = `./opf:itemref${idFilter(ids)}${anyPropertiesFilter(
       anyProperties,
     )}${allPropertiesFilter(allProperties)}`
 
@@ -144,18 +161,10 @@ export class Spine extends ID(Entity) {
   }
 }
 
-export class SpineItem extends PropertiesList(ID(Entity)) {
-  get __typename(): string {
-    return 'SpineItem'
-  }
-
+export class SpineItem extends Properties(ID(Entity)) {
   idref(): Maybe<ManifestItem> {
     const idref = this._resolve('./@idref')
-    if (idref) {
-      return toArray(
-        (this._context as Package).manifest()?.item({ id: idref }),
-      )[0]
-    }
+    return resolveIdref(this, idref)
   }
 
   linear(): boolean {
@@ -167,35 +176,19 @@ export class SpineItem extends PropertiesList(ID(Entity)) {
   }
 }
 
-export class ManifestItem extends Resource(PropertiesList(ID(Entity))) {
-  get __typename(): string {
-    return 'ManifestItem'
-  }
-
+export class ManifestItem extends Resource(Properties(ID(Entity))) {
   mediaOverlay(): Maybe<ManifestItem> {
     const idref = this._resolve('./@media-overlay')
-    if (idref) {
-      return toArray(
-        (this._context as Package).manifest()?.item({ id: idref }),
-      )[0]
-    }
+    return resolveIdref(this, idref)
   }
 
   fallback(): Maybe<ManifestItem> {
     const idref = this._resolve('./@fallback')
-    if (idref) {
-      return toArray(
-        (this._context as Package).manifest()?.item({ id: idref }),
-      )[0]
-    }
+    return resolveIdref(this, idref)
   }
 }
 
 export class Manifest extends ID(Entity) {
-  get __typename(): string {
-    return 'Manifest'
-  }
-
   item({
     id,
     href,
@@ -203,15 +196,37 @@ export class Manifest extends ID(Entity) {
     allProperties,
     onlyProperties,
   }: {
-    id?: string | string[]
+    id?: string
     href?: string
     anyProperties?: string[]
     allProperties?: string[]
     onlyProperties?: string[]
-  }): ManifestItem[] {
+  } = {}): Maybe<ManifestItem> {
+    return this.items({
+      ids: id ? [id] : [],
+      href,
+      anyProperties,
+      allProperties,
+      onlyProperties,
+    })[0]
+  }
+
+  items({
+    ids,
+    href,
+    anyProperties,
+    allProperties,
+    onlyProperties,
+  }: {
+    ids?: string[]
+    href?: string
+    anyProperties?: string[]
+    allProperties?: string[]
+    onlyProperties?: string[]
+  } = {}): ManifestItem[] {
     if (onlyProperties) {
-      return this.item({
-        id,
+      return this.items({
+        ids: ids,
         anyProperties,
         allProperties: onlyProperties,
       })?.filter(
@@ -219,7 +234,7 @@ export class Manifest extends ID(Entity) {
       )
     }
 
-    const expression = `./opf:item${idFilter(id)}${attributeFilter(
+    const expression = `./opf:item${idFilter(ids)}${attributeFilter(
       '@href',
       href,
     )}${anyPropertiesFilter(anyProperties)}${allPropertiesFilter(
@@ -231,104 +246,48 @@ export class Manifest extends ID(Entity) {
 }
 
 export class Identifier extends Value(MetaProperties(ID(Entity))) {
-  get __typename(): string {
-    return 'Identifier'
-  }
-
   identifierType(): Maybe<Meta> {
     return this._resolveMetaProperty('identifier-type')
   }
 }
 
 export class Title extends Value(I18n(MetaProperties(ID(Entity)))) {
-  get __typename(): string {
-    return 'Title'
-  }
-
   titleType(): Maybe<Meta> {
     return this._resolveMetaProperty('title-type')
   }
 }
 
-export class Language extends Value(MetaProperties(ID(Entity))) {
-  get __typename(): string {
-    return 'Language'
-  }
-}
+export class Language extends Value(MetaProperties(ID(Entity))) {}
 
 export class Contributor extends Value(I18n(MetaProperties(ID(Entity)))) {
-  get __typename(): string {
-    return 'Contributor'
-  }
-
   role(): Maybe<Meta> {
     return this._resolveMetaProperty('role')
   }
 }
 
-export class Coverage extends Value(I18n(MetaProperties(ID(Entity)))) {
-  get __typename(): string {
-    return 'Coverage'
-  }
-}
+export class Coverage extends Value(I18n(MetaProperties(ID(Entity)))) {}
 
-export class Creator extends Contributor {
-  get __typename(): string {
-    return 'Creator'
-  }
-}
+export class Creator extends Contributor {}
 
-export class Date extends Value(MetaProperties(ID(Entity))) {
-  get __typename(): string {
-    return 'Date'
-  }
-}
+export class Date extends Value(MetaProperties(ID(Entity))) {}
 
-export class Description extends Value(I18n(MetaProperties(ID(Entity)))) {
-  get __typename(): string {
-    return 'Description'
-  }
-}
+export class Description extends Value(I18n(MetaProperties(ID(Entity)))) {}
 
-export class Format extends Value(MetaProperties(ID(Entity))) {
-  get __typename(): string {
-    return 'Format'
-  }
-}
+export class Format extends Value(MetaProperties(ID(Entity))) {}
 
-export class Publisher extends Value(I18n(MetaProperties(ID(Entity)))) {
-  get __typename(): string {
-    return 'Publisher'
-  }
-}
+export class Publisher extends Value(I18n(MetaProperties(ID(Entity)))) {}
 
-export class Relation extends Value(I18n(MetaProperties(ID(Entity)))) {
-  get __typename(): string {
-    return 'Relation'
-  }
-}
+export class Relation extends Value(I18n(MetaProperties(ID(Entity)))) {}
 
-export class Rights extends Value(I18n(MetaProperties(ID(Entity)))) {
-  get __typename(): string {
-    return 'Rights'
-  }
-}
+export class Rights extends Value(I18n(MetaProperties(ID(Entity)))) {}
 
 export class Source extends Identifier {
-  get __typename(): string {
-    return 'Source'
-  }
-
   sourceOf(): Maybe<Meta> {
     return this._resolveMetaProperty('source-of')
   }
 }
 
 export class Subject extends Value(I18n(MetaProperties(ID(Entity)))) {
-  get __typename(): string {
-    return 'Subject'
-  }
-
   authority(): Maybe<Meta> {
     return this._resolveMetaProperty('authority')
   }
@@ -338,19 +297,11 @@ export class Subject extends Value(I18n(MetaProperties(ID(Entity)))) {
   }
 }
 
-export class Type extends Value(MetaProperties(ID(Entity))) {
-  get __typename(): string {
-    return 'Type'
-  }
-}
+export class Type extends Value(MetaProperties(ID(Entity))) {}
 
 export class BelongsToCollection extends Value(
   I18n(Refines(MetaAttributes(MetaProperties(ID(Entity))))),
 ) {
-  get __typename(): string {
-    return 'BelongsToCollection'
-  }
-
   identifier(): Maybe<Meta> {
     return this._resolveMetaProperty('dcterms:identifier')
   }
@@ -359,7 +310,11 @@ export class BelongsToCollection extends Value(
     return this._resolveMetaProperty('collection-type')
   }
 
-  belongsToCollection(): Meta[] {
+  belongsToCollection(): Meta {
+    return this.belongsToCollections()[0]
+  }
+
+  belongsToCollections(): Meta[] {
     return this._resolveMetaPropertyList(
       'belongs-to-collection',
       BelongsToCollection,
@@ -367,12 +322,12 @@ export class BelongsToCollection extends Value(
   }
 }
 
-export class Link extends Resource(PropertiesList(Refines(ID(Entity)))) {
-  get __typename(): string {
-    return 'Link'
+export class Link extends Resource(Properties(Refines(ID(Entity)))) {
+  rel(): Maybe<string> {
+    return this.rels()[0]
   }
 
-  rel(): string[] {
+  rels(): string[] {
     const rel = this._resolve('./@rel') as string
     if (rel) {
       return splitRelAttribute(rel)
@@ -386,10 +341,6 @@ export class Metadata extends ID(Entity) {
     [idRefined: string]: {
       [property: string]: Node[]
     }
-  }
-
-  get __typename(): string {
-    return 'Metadata'
   }
 
   constructor(node: Node, context: Entity) {
@@ -465,7 +416,7 @@ export class Metadata extends ID(Entity) {
     return metaNodes.map((node: Node) => new constructor(node, this._context))
   }
 
-  identifier({ id }: { id?: string | string[] }): Maybe<Identifier> {
+  identifier({ id }: { id?: string }): Maybe<Identifier> {
     return this._resolve(`./dc:identifier${idFilter(id)}`, Identifier)
   }
 
@@ -478,70 +429,126 @@ export class Metadata extends ID(Entity) {
     }
   }
 
-  title({ id }: { id?: string | string[] }): Title[] {
-    return this._resolveAll(`./dc:title${idFilter(id)}`, Title)
+  title({ id }: { id?: string }): Title {
+    return this.titles({ ids: id ? [id] : [] })[0]
   }
 
-  language({ id }: { id?: string | string[] }): Language[] {
-    return this._resolveAll(`./dc:language${idFilter(id)}`, Language)
+  titles({ ids }: { ids?: string[] }): Title[] {
+    return this._resolveAll(`./dc:title${idFilter(ids)}`, Title)
   }
 
-  contributor({ id }: { id?: string | string[] }): Contributor[] {
-    return this._resolveAll(`./dc:contributor${idFilter(id)}`, Contributor)
+  language({ id }: { id?: string }): Language {
+    return this.languages({ ids: id ? [id] : [] })[0]
   }
 
-  coverage({ id }: { id?: string | string[] }): Coverage[] {
-    return this._resolveAll(`./dc:coverage${idFilter(id)}`, Coverage)
+  languages({ ids }: { ids?: string[] }): Language[] {
+    return this._resolveAll(`./dc:language${idFilter(ids)}`, Language)
   }
 
-  creator({ id }: { id?: string | string[] }): Creator[] {
-    return this._resolveAll(`./dc:creator${idFilter(id)}`, Creator)
+  contributor({ id }: { id?: string }): Contributor {
+    return this.contributors({ ids: id ? [id] : [] })[0]
   }
 
-  date({ id }: { id?: string | string[] }): Date[] {
-    return this._resolveAll(`./dc:date${idFilter(id)}`, Date)
+  contributors({ ids }: { ids?: string[] }): Contributor[] {
+    return this._resolveAll(`./dc:contributor${idFilter(ids)}`, Contributor)
   }
 
-  description({ id }: { id?: string | string[] }): Description[] {
-    return this._resolveAll(`./dc:description${idFilter(id)}`, Description)
+  coverage({ id }: { id?: string }): Coverage {
+    return this.coverages({ ids: id ? [id] : [] })[0]
   }
 
-  format({ id }: { id?: string | string[] }): Format[] {
-    return this._resolveAll(`./dc:format${idFilter(id)}`, Format)
+  coverages({ ids }: { ids?: string[] }): Coverage[] {
+    return this._resolveAll(`./dc:coverage${idFilter(ids)}`, Coverage)
   }
 
-  publisher({ id }: { id?: string | string[] }): Publisher[] {
-    return this._resolveAll(`./dc:publisher${idFilter(id)}`, Publisher)
+  creator({ id }: { id?: string }): Creator {
+    return this.creators({ ids: id ? [id] : [] })[0]
   }
 
-  relation({ id }: { id?: string | string[] }): Relation[] {
-    return this._resolveAll(`./dc:relation${idFilter(id)}`, Relation)
+  creators({ ids }: { ids?: string[] }): Creator[] {
+    return this._resolveAll(`./dc:creator${idFilter(ids)}`, Creator)
   }
 
-  rights({ id }: { id?: string | string[] }): Rights[] {
-    return this._resolveAll(`./dc:rights${idFilter(id)}`, Rights)
+  date({ id }: { id?: string }): Maybe<Date> {
+    return this._resolve(`./dc:date${idFilter(id)}`, Date)
   }
 
-  source({ id }: { id?: string | string[] }): Source[] {
-    return this._resolveAll(`./dc:source${idFilter(id)}`, Source)
+  description({ id }: { id?: string }): Description {
+    return this.descriptions({ ids: id ? [id] : [] })[0]
   }
 
-  subject({ id }: { id?: string | string[] }): Subject[] {
-    return this._resolveAll(`./dc:subject${idFilter(id)}`, Subject)
+  descriptions({ ids }: { ids?: string[] }): Description[] {
+    return this._resolveAll(`./dc:description${idFilter(ids)}`, Description)
   }
 
-  type({ id }: { id?: string | string[] }): Type[] {
-    return this._resolveAll(`./dc:type${idFilter(id)}`, Type)
+  format({ id }: { id?: string }): Format {
+    return this.formats({ ids: id ? [id] : [] })[0]
   }
 
-  belongsToCollection({
-    id,
+  formats({ ids }: { ids?: string[] }): Format[] {
+    return this._resolveAll(`./dc:format${idFilter(ids)}`, Format)
+  }
+
+  publisher({ id }: { id?: string }): Publisher {
+    return this.publishers({ ids: id ? [id] : [] })[0]
+  }
+
+  publishers({ ids }: { ids?: string[] }): Publisher[] {
+    return this._resolveAll(`./dc:publisher${idFilter(ids)}`, Publisher)
+  }
+
+  relation({ id }: { id?: string }): Relation {
+    return this.relations({ ids: id ? [id] : [] })[0]
+  }
+
+  relations({ ids }: { ids?: string[] }): Relation[] {
+    return this._resolveAll(`./dc:relation${idFilter(ids)}`, Relation)
+  }
+
+  rights({ id }: { id?: string }): Rights {
+    return this.rightses({ ids: id ? [id] : [] })[0]
+  }
+
+  rightses({ ids }: { ids?: string[] }): Rights[] {
+    return this._resolveAll(`./dc:rights${idFilter(ids)}`, Rights)
+  }
+
+  source({ id }: { id?: string }): Source {
+    return this.sources({ ids: id ? [id] : [] })[0]
+  }
+
+  sources({ ids }: { ids?: string[] }): Source[] {
+    return this._resolveAll(`./dc:source${idFilter(ids)}`, Source)
+  }
+
+  subject({ id }: { id?: string }): Subject {
+    return this.subjects({ ids: id ? [id] : [] })[0]
+  }
+
+  subjects({ ids }: { ids?: string[] }): Subject[] {
+    return this._resolveAll(`./dc:subject${idFilter(ids)}`, Subject)
+  }
+
+  type({ id }: { id?: string }): Type {
+    return this.types({ ids: id ? [id] : [] })[0]
+  }
+
+  types({ ids }: { ids?: string[] }): Type[] {
+    return this._resolveAll(`./dc:type${idFilter(ids)}`, Type)
+  }
+
+  belongsToCollection({ id }: { id?: string }): BelongsToCollection {
+    return this.belongsToCollections({ ids: id ? [id] : [] })[0]
+  }
+
+  belongsToCollections({
+    ids,
   }: {
-    id?: string | string[]
-  }): BelongsToCollection[] {
+    ids?: string[]
+  } = {}): BelongsToCollection[] {
     return this._resolveAll(
       `./opf:meta${idFilter(
-        id,
+        ids,
       )}[@property='belongs-to-collection' and not(@refines)]`,
       BelongsToCollection,
     )
@@ -552,12 +559,28 @@ export class Metadata extends ID(Entity) {
     property,
     refines,
   }: {
-    id?: string | string[]
+    id?: string
     property?: string
     refines?: string
-  }): Meta[] {
+  } = {}): Maybe<Meta> {
+    return this.metas({
+      ids: id ? [id] : [],
+      property,
+      refines,
+    })[0]
+  }
+
+  metas({
+    ids,
+    property,
+    refines,
+  }: {
+    ids?: string[]
+    property?: string
+    refines?: string
+  } = {}): Meta[] {
     return this._resolveAll(
-      `./opf:meta${idFilter(id)}${attributeFilter(
+      `./opf:meta${idFilter(ids)}${attributeFilter(
         '@property',
         property,
         'and',
@@ -570,8 +593,17 @@ export class Metadata extends ID(Entity) {
     )
   }
 
-  link(args: {
-    id?: string | string[]
+  link({
+    id,
+    href,
+    anyProperties,
+    allProperties,
+    onlyProperties,
+    anyRel,
+    allRel,
+    onlyRel,
+  }: {
+    id?: string
     href?: string
     anyProperties?: string[]
     allProperties?: string[]
@@ -579,9 +611,33 @@ export class Metadata extends ID(Entity) {
     anyRel?: string[]
     allRel?: string[]
     onlyRel?: string[]
-  }): Link[] {
+  } = {}): Maybe<Link> {
+    return this.links({
+      ids: id ? [id] : [],
+      href,
+      anyProperties,
+      allProperties,
+      onlyProperties,
+      anyRel,
+      allRel,
+      onlyRel,
+    })[0]
+  }
+
+  links(
+    args: {
+      ids?: string[]
+      href?: string
+      anyProperties?: string[]
+      allProperties?: string[]
+      onlyProperties?: string[]
+      anyRel?: string[]
+      allRel?: string[]
+      onlyRel?: string[]
+    } = {},
+  ): Link[] {
     const {
-      id,
+      ids,
       href,
       anyProperties,
       allProperties,
@@ -592,7 +648,7 @@ export class Metadata extends ID(Entity) {
     } = args
 
     if (onlyProperties) {
-      return this.link({
+      return this.links({
         ...args,
         allProperties: onlyProperties,
         onlyProperties: undefined,
@@ -602,12 +658,14 @@ export class Metadata extends ID(Entity) {
     }
 
     if (onlyRel) {
-      return this.link({ ...args, allRel: onlyRel, onlyRel: undefined }).filter(
-        (item) => toArray(item.rel()).length === onlyRel.length,
-      )
+      return this.links({
+        ...args,
+        allRel: onlyRel,
+        onlyRel: undefined,
+      }).filter((item) => toArray(item.rels()).length === onlyRel.length)
     }
 
-    const expression = `./opf:link${idFilter(id)}${attributeFilter(
+    const expression = `./opf:link${idFilter(ids)}${attributeFilter(
       '@href',
       href,
     )}${anyPropertiesFilter(anyProperties)}${allPropertiesFilter(
@@ -622,10 +680,6 @@ export class Package extends I18n(ID(Entity)) {
   private _metadata: Maybe<Metadata>
   private _spine: Maybe<Spine>
   private _manifest: Maybe<Manifest>
-
-  get __typename(): string {
-    return 'Package'
-  }
 
   constructor(doc: Node) {
     super(select('/opf:package', doc) as Node)

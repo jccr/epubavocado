@@ -4,10 +4,6 @@ import { Maybe, splitRelAttribute } from '../util.js'
 import { select } from '../xpath.js'
 
 export class ContainerLink extends Resource(Entity) {
-  get __typename(): string {
-    return 'ContainerLink'
-  }
-
   rel(): string[] {
     const rel = this._resolve('./@rel') as string
     if (rel) {
@@ -18,10 +14,6 @@ export class ContainerLink extends Resource(Entity) {
 }
 
 export class Rootfile extends Entity {
-  get __typename(): string {
-    return 'Rootfile'
-  }
-
   fullPath(): Maybe<string> {
     return this._resolve('./@full-path')
   }
@@ -32,10 +24,6 @@ export class Rootfile extends Entity {
 }
 
 export class Container extends Entity {
-  get __typename(): string {
-    return 'Container'
-  }
-
   constructor(doc: Node) {
     super(select('/ocf:container', doc) as Node)
   }

@@ -5,7 +5,7 @@ import xmldom from 'xmldom'
 
 import { Container } from '../src/mod.js'
 
-it('initializes Container', () => {
+test('Container', () => {
   const xmlDoc = new xmldom.DOMParser().parseFromString(
     readFileSync(join(__dirname, 'data/container.xml'), 'utf-8'),
   )

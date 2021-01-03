@@ -31,6 +31,10 @@ export function MetaProperties<TBase extends EntityConstructor>(Base: TBase) {
     }
 
     alternateScript() {
+      return this.alternateScripts()[0]
+    }
+
+    alternateScripts() {
       return this._resolveMetaPropertyList('alternate-script')
     }
 

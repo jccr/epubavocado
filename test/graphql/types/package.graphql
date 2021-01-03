@@ -2,28 +2,65 @@ type Metadata {
   identifier: Identifier
   modified: Meta
 
-  title(id: [ID]): [Title]
-  language(id: [ID]): [Language]
+  title(id: ID): Title
+  titles(ids: [ID]): [Title]
 
-  contributor(id: [ID]): [Contributor]
-  coverage(id: [ID]): [Coverage]
-  creator(id: [ID]): [Creator]
-  date(id: [ID]): [Date]
-  description(id: [ID]): [Description]
-  format(id: [ID]): [Format]
-  publisher(id: [ID]): [Publisher]
-  relation(id: [ID]): [Relation]
-  rights(id: [ID]): [Rights]
-  source(id: [ID]): [Source]
-  subject(id: [ID]): [Subject]
-  type(id: [ID]): [Type]
+  language(id: ID): Language
+  languages(ids: [ID]): [Language]
 
-  belongsToCollection(id: [ID]): [BelongsToCollection]
+  contributor(id: ID): Contributor
+  contributors(ids: [ID]): [Contributor]
 
-  meta(id: [ID], property: String, refines: ID): [Meta]
+  coverage(id: ID): Coverage
+  coverages(ids: [ID]): [Coverage]
+  
+  creator(id: ID): Creator
+  creators(ids: [ID]): [Creator]
+  
+  date(ids: [ID]): [Date]
+  
+  description(id: ID): Description
+  descriptions(ids: [ID]): [Description]
+  
+  format(id: ID): Format
+  formats(ids: [ID]): [Format]
+  
+  publisher(id: ID): Publisher
+  publishers(ids: [ID]): [Publisher]
+  
+  relation(id: ID): Relation
+  relations(ids: [ID]): [Relation]
+
+  rights(id: ID): Rights
+  rightses(ids: [ID]): [Rights]
+
+  source(id: ID): Source
+  sources(ids: [ID]): [Source]
+  
+  subject(id: ID): Subject
+  subjects(ids: [ID]): [Subject]
+  
+  type(id: ID): Type
+  types(ids: [ID]): [Type]
+
+  belongsToCollection(id: ID): BelongsToCollection
+  belongsToCollections(ids: [ID]): [BelongsToCollection]
+
+  meta(id: ID, property: String, refines: ID): Meta
+  metas(ids: [ID], property: String, refines: ID): [Meta]
 
   link(
-    id: [ID]
+    id: ID
+    href: String
+    anyProperties: [String]
+    allProperties: [String]
+    onlyProperties: [String]
+    anyRel: [String]
+    allRel: [String]
+    onlyRel: [String]
+  ): [Link]
+  links(
+    ids: [ID]
     href: String
     anyProperties: [String]
     allProperties: [String]
@@ -34,7 +71,7 @@ type Metadata {
   ): [Link]
 }
 
-type ManifestItem implements Node & Resource & PropertiesList {
+type ManifestItem implements Node & Resource & Properties {
   id: ID
 
   href: String
@@ -50,7 +87,14 @@ type Manifest implements Node {
   id: ID
 
   item(
-    id: [ID]
+    id: ID
+    href: String
+    anyProperties: [String]
+    allProperties: [String]
+    onlyProperties: [String]
+  ): ManifestItem
+  items(
+    ids: [ID]
     href: String
     anyProperties: [String]
     allProperties: [String]
@@ -58,7 +102,7 @@ type Manifest implements Node {
   ): [ManifestItem]
 }
 
-type SpineItem implements Node & PropertiesList {
+type SpineItem implements Node & Properties {
   id: ID
 
   properties: [String]
@@ -72,8 +116,16 @@ type Spine implements Node {
 
   pageProgressionDirection: String
   toc: ManifestItem
+
   itemref(
-    id: [ID]
+    id: ID
+    anyProperties: [String]
+    allProperties: [String]
+    onlyProperties: [String]
+    linear: Boolean
+  ): SpineItem
+  itemrefs(
+    ids: [ID]
     anyProperties: [String]
     allProperties: [String]
     onlyProperties: [String]

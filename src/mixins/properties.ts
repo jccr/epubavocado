@@ -1,8 +1,8 @@
 import type { EntityConstructor } from './entity.js'
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export function PropertiesList<TBase extends EntityConstructor>(Base: TBase) {
-  return class PropertiesList extends Base {
+export function Properties<TBase extends EntityConstructor>(Base: TBase) {
+  return class Properties extends Base {
     properties() {
       const properties = this._resolve('./@properties') as string
       if (properties) {

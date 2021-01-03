@@ -1,7 +1,7 @@
 import { Package } from '../../src/mod.js'
 
 it('initializes Package', async () => {
-  const xmlData = await (await fetch('/base/test/data/input.opf')).text()
+  const xmlData = await (await fetch('/base/test/data/package.opf')).text()
   const xmlDoc = new DOMParser().parseFromString(xmlData, 'application/xml')
 
   const testPackage = new Package(xmlDoc)

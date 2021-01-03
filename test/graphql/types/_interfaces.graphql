@@ -21,7 +21,8 @@ interface MetaAttributes {
 }
 
 interface MetaProperties {
-  alternateScript: [Meta]
+  alternateScript: Meta
+  alternateScripts: [Meta]
   displaySeq: Meta
   fileAs: Meta
   groupPosition: Meta
@@ -33,6 +34,6 @@ interface Resource {
   mediaType: String
 }
 
-interface PropertiesList {
+interface Properties {
   properties: [String]
 }

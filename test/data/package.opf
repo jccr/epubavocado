@@ -59,7 +59,7 @@
 		<meta refines="#c03" property="dcterms:identifier">urn:uuid:33333333-1111-2222-6666-555555555555</meta>
 	</metadata>
 	<manifest>
-		<item id="bad" href="bad.bad" />
+		<item id="bad" properties="nav svg" href="bad.bad" />
 		<item id="font.stix.regular" href="fonts/STIXGeneral.otf" media-type="application/vnd.ms-opentype" />
 		<item id="font.stix.italic" href="fonts/STIXGeneralItalic.otf" media-type="application/vnd.ms-opentype" />
 		<item id="font.stix.bold" href="fonts/STIXGeneralBol.otf" media-type="application/vnd.ms-opentype" />
@@ -80,7 +80,7 @@
 		<item id="chapter_002_overlay" href="chapter_002_overlay.smil" media-type="application/smil+xml" />
 		<item id="xchapter_003" href="chapter_003.xhtml" media-type="application/xhtml+xml" />
 		<item id="chapter_001_audio" href="audio/mobydick_001_002_melville.mp4" media-type="audio/mp4" />
-		<item id="xchapter_004" properties="nav  mathml 	cover-image" href="chapter_004.xhtml" media-type="application/xhtml+xml" />
+		<item id="xchapter_004" properties="mathml	 remote-resources   scripted" href="chapter_004.xhtml" media-type="application/xhtml+xml" />
 		<item id="xchapter_005" href="chapter_005.xhtml" media-type="application/xhtml+xml" />
 		<item id="xchapter_006" href="chapter_006.xhtml" media-type="application/xhtml+xml" />
 		<item id="xchapter_007" href="chapter_007.xhtml" media-type="application/xhtml+xml" />
@@ -118,7 +118,7 @@
 		<item id="xchapter_039" href="chapter_039.xhtml" media-type="application/xhtml+xml" />
 		<item id="xchapter_040" href="chapter_040.xhtml" media-type="application/xhtml+xml" />
 		<item id="xchapter_041" href="chapter_041.xhtml" media-type="application/xhtml+xml" />
-		<item id="xchapter_042" href="chapter_042.xhtml" media-type="application/xhtml+xml" />
+		<item id="xchapter_042" properties="svg remote-resources scripted" href="chapter_042.xhtml" media-type="application/xhtml+xml" />
 		<item id="xchapter_043" href="chapter_043.xhtml" media-type="application/xhtml+xml" />
 		<item id="xchapter_044" href="chapter_044.xhtml" media-type="application/xhtml+xml" />
 		<item id="xchapter_045" href="chapter_045.xhtml" media-type="application/xhtml+xml" />
@@ -153,7 +153,7 @@
 		<item id="xchapter_074" href="chapter_074.xhtml" media-type="application/xhtml+xml" />
 		<item id="xchapter_075" href="chapter_075.xhtml" media-type="application/xhtml+xml" />
 		<item id="xchapter_076" href="chapter_076.xhtml" media-type="application/xhtml+xml" />
-		<item id="xchapter_077" href="chapter_077.xhtml" media-type="application/xhtml+xml" />
+		<item id="xchapter_077" properties="remote-resources scripted" href="chapter_077.xhtml" media-type="application/xhtml+xml" />
 		<item id="xchapter_078" href="chapter_078.xhtml" media-type="application/xhtml+xml" />
 		<item id="xchapter_079" href="chapter_079.xhtml" media-type="application/xhtml+xml" />
 		<item id="xchapter_080" href="chapter_080.xhtml" media-type="application/xhtml+xml" />
@@ -164,7 +164,7 @@
 		<item id="xchapter_085" href="chapter_085.xhtml" media-type="application/xhtml+xml" />
 		<item id="xchapter_086" href="chapter_086.xhtml" media-type="application/xhtml+xml" />
 		<item id="xchapter_087" href="chapter_087.xhtml" media-type="application/xhtml+xml" />
-		<item id="xchapter_088" href="chapter_088.xhtml" media-type="application/xhtml+xml" />
+		<item id="xchapter_088" properties="remote-resources" href="chapter_088.xhtml" media-type="application/xhtml+xml" />
 		<item id="xchapter_089" href="chapter_089.xhtml" media-type="application/xhtml+xml" />
 		<item id="xchapter_090" href="chapter_090.xhtml" media-type="application/xhtml+xml" />
 		<item id="xchapter_091" href="chapter_091.xhtml" media-type="application/xhtml+xml" />

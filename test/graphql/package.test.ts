@@ -11,9 +11,9 @@ import { Package } from '../../src/mod.js'
 
 const typesArray = loadFilesSync(join(__dirname, 'types/**/*.graphql'))
 
-it('initializes Package', async () => {
+test('Package', async () => {
   const xmlDoc = new xmldom.DOMParser().parseFromString(
-    readFileSync(join(__dirname, '../data/input.opf'), 'utf-8'),
+    readFileSync(join(__dirname, '../data/package.opf'), 'utf-8'),
   )
 
   const result = await graphql(

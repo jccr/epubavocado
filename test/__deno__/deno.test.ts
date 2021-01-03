@@ -5,7 +5,7 @@ import { Package } from '../../lib/esm/mod.js'
 
 Deno.test('initializes Package', () => {
   const xmlDoc = new xmldom.DOMParser().parseFromString(
-    Deno.readTextFileSync('test/data/input.opf'),
+    Deno.readTextFileSync('test/data/package.opf'),
   )
 
   const testPackage = new Package(xmlDoc)

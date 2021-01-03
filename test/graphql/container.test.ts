@@ -11,7 +11,7 @@ import { Container } from '../../src/mod.js'
 
 const typesArray = loadFilesSync(join(__dirname, 'types/**/*.graphql'))
 
-it('initializes Container', async () => {
+test('Container', async () => {
   const xmlDoc = new xmldom.DOMParser().parseFromString(
     readFileSync(join(__dirname, '../data/container.xml'), 'utf-8'),
   )
@@ -48,7 +48,6 @@ it('initializes Container', async () => {
   expect(result.data).toBeDefined()
 
   const container = result.data?.container
-
   expect(container.version).toBe('1.0')
 
   const rootfiles = container.rootfiles
