@@ -1,5 +1,4 @@
 [![npm](https://img.shields.io/npm/v/epubavocado)](https://www.npmjs.com/package/epubavocado)
-[![Dependencies](https://img.shields.io/david/jccr/epubavocado)](https://david-dm.org/jccr/epubavocado)
 [![Node.js](https://github.com/jccr/epubavocado/workflows/Node.js/badge.svg)](https://github.com/jccr/epubavocado/actions?query=workflow%3ANode.js)
 [![Browser](https://github.com/jccr/epubavocado/workflows/Browser/badge.svg)](https://github.com/jccr/epubavocado/actions?query=workflow%3ABrowser)
 [![Deno](https://github.com/jccr/epubavocado/workflows/Deno/badge.svg)](https://github.com/jccr/epubavocado/actions?query=workflow%3ADeno)
