@@ -16,9 +16,10 @@ test('Container', async () => {
     readFileSync(join(__dirname, '../data/container.xml'), 'utf-8'),
   )
 
-  const result = await graphql(
-    buildASTSchema(mergeTypeDefs(typesArray)),
-    `
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const result: any = await graphql({
+    schema: buildASTSchema(mergeTypeDefs(typesArray)),
+    source: `
       {
         container {
           version
@@ -38,12 +39,12 @@ test('Container', async () => {
         }
       }
     `,
-    {
+    rootValue: {
       container: () => {
         return new Container(xmlDoc)
       },
     },
-  )
+  })
 
   expect(result.data).toBeDefined()
 

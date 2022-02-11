@@ -16,9 +16,10 @@ test('Package', async () => {
     readFileSync(join(__dirname, '../data/package.opf'), 'utf-8'),
   )
 
-  const result = await graphql(
-    buildASTSchema(mergeTypeDefs(typesArray)),
-    `
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const result: any = await graphql({
+    schema: buildASTSchema(mergeTypeDefs(typesArray)),
+    source: `
       {
         package {
           version
@@ -29,12 +30,12 @@ test('Package', async () => {
         }
       }
     `,
-    {
+    rootValue: {
       package: () => {
         return new Package(xmlDoc)
       },
     },
-  )
+  })
 
   expect(result.data).toBeDefined()
 
